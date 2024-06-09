@@ -5,6 +5,7 @@ import json
 import tensorflow as tf
 from keras import backend as K
 
+
 def configure_tensorflow():
     print(tf.__version__)
     tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
@@ -13,17 +14,27 @@ def configure_tensorflow():
     if physical_devices:
         tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
+
 def get_filename_only(file_path):
     file_basename = os.path.basename(file_path)
     filename_only = file_basename.split('.')[0]
     return filename_only
 
-def process_videos(base_path):
-    with open(os.path.join(base_path, 'metadata.json')) as metadata_json:
-        metadata = json.load(metadata_json)
-        print(f"Total files in metadata: {len(metadata)}")
 
-    for filename in metadata.keys():
+def get_all_directories(directory):
+    files_and_folders = os.listdir(directory)
+    dirs = [f for f in files_and_folders if os.path.isdir(os.path.join(directory, f))]
+    return dirs
+
+
+def process_images(base_path):
+    # with open(os.path.join(base_path, 'metadata.json')) as metadata_json:
+    #     metadata = json.load(metadata_json)
+    #     print(f"Total files in metadata: {len(metadata)}")
+
+    dirs = get_all_directories(base_path)
+
+    for filename in dirs:
         tmp_path = os.path.join(base_path, get_filename_only(filename))
         print(f'Processing Directory: {tmp_path}')
         frame_images = [x for x in os.listdir(tmp_path) if os.path.isfile(os.path.join(tmp_path, x))]
@@ -60,8 +71,9 @@ def process_videos(base_path):
                 else:
                     print('Skipped a face..')
 
+
 # Example usage
 if __name__ == "__main__":
-    base_path = './train_sample_videos/'
+    base_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/output/'
     configure_tensorflow()
-    process_videos(base_path)
+    process_images(base_path)

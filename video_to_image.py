@@ -4,20 +4,29 @@ import cv2
 import math
 
 
-def process_videos(base_path):
+def process_videos(base_path, output_path):
     def get_filename_only(file_path):
         file_basename = os.path.basename(file_path)
         filename_only = file_basename.split('.')[0]
         return filename_only
 
-    with open(os.path.join(base_path, 'metadata.json')) as metadata_json:
-        metadata = json.load(metadata_json)
-        print(f"Total files in metadata: {len(metadata)}")
+    def get_all_files(directory):
+        files_and_folders = os.listdir(directory)
+        files = [f for f in files_and_folders if os.path.isfile(os.path.join(directory, f))]
+        return files
 
-    for filename in metadata.keys():
+    # with open(os.path.join(base_path, 'metadata.json')) as metadata_json:
+    #     metadata = json.load(metadata_json)
+    #     print(f"Total files in metadata: {len(metadata)}")
+
+    files = get_all_files(base_path)
+    for filename in files:
         print(f"Processing file: {filename}")
         if filename.endswith(".mp4"):
-            tmp_path = os.path.join(base_path, get_filename_only(filename))
+            if output_path:
+                tmp_path = os.path.join(output_path, get_filename_only(filename))
+            else:
+                tmp_path = os.path.join(base_path, get_filename_only(filename))
             print(f'Creating Directory: {tmp_path}')
             os.makedirs(tmp_path, exist_ok=True)
             print('Converting Video to Images...')
@@ -55,3 +64,9 @@ def process_videos(base_path):
             print("Done!")
         else:
             continue
+
+
+if __name__ == '__main__':
+    base_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/'
+    output_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/output/'
+    process_videos(base_path, output_path)
