@@ -9,6 +9,8 @@ __pycache__/
 
 .idea/
 raw_dataset/**
+train_dataset/**
+models/**
 
 # Distribution / packaging
 .Python

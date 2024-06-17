@@ -27,12 +27,14 @@ def get_all_directories(directory):
     return dirs
 
 
-def process_images(base_path):
+def process_images(base_path, is_fake):
     # with open(os.path.join(base_path, 'metadata.json')) as metadata_json:
     #     metadata = json.load(metadata_json)
     #     print(f"Total files in metadata: {len(metadata)}")
 
     dirs = get_all_directories(base_path)
+
+    output_path = './train_dataset/fake' if is_fake else './train_dataset/real'
 
     for filename in dirs:
         tmp_path = os.path.join(base_path, get_filename_only(filename))
@@ -68,6 +70,8 @@ def process_images(base_path):
                     new_filename = '{}-{:02d}.png'.format(os.path.join(faces_path, get_filename_only(frame)), count)
                     count += 1
                     cv2.imwrite(new_filename, cv2.cvtColor(crop_image, cv2.COLOR_RGB2BGR))
+                    output_filename = '{}-{:02d}.png'.format(os.path.join(output_path, get_filename_only(frame)), count)
+                    cv2.imwrite(output_filename, cv2.cvtColor(crop_image, cv2.COLOR_RGB2BGR))
                 else:
                     print('Skipped a face..')
 
@@ -76,4 +80,4 @@ def process_images(base_path):
 if __name__ == "__main__":
     base_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/output/'
     configure_tensorflow()
-    process_images(base_path)
+    process_images(base_path, is_fake=True)
