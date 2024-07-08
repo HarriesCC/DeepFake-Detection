@@ -32,7 +32,7 @@ batch_size_num = 32
 num_epochs = 20
 train_path = os.path.join(dataset_path, 'train')
 validation_path = os.path.join(dataset_path, 'validation')
-# test_path = os.path.join(dataset_path, 'test')
+test_path = os.path.join(dataset_path, 'test')
 
 
 # Data generators
@@ -58,7 +58,7 @@ def create_data_generators():
         batch_size=batch_size_num,
         shuffle=True
     )
-    val_generator = test_datagen.flow_from_directory(
+    val_generator = validation_datagen.flow_from_directory(
         directory=validation_path,
         target_size=(input_size, input_size),
         color_mode="rgb",
@@ -66,20 +66,20 @@ def create_data_generators():
         batch_size=batch_size_num,
         shuffle=True
     )
-    # test_generator = test_datagen.flow_from_directory(
-    #     directory=test_path,
-    #     classes=['real', 'fake'],
-    #     target_size=(input_size, input_size),
-    #     color_mode="rgb",
-    #     class_mode=None,
-    #     batch_size=1,
-    #     shuffle=False
-    # )
+    test_generator = test_datagen.flow_from_directory(
+        directory=test_path,
+        classes=['real', 'fake'],
+        target_size=(input_size, input_size),
+        color_mode="rgb",
+        class_mode=None,
+        batch_size=1,
+        shuffle=False
+    )
 
-    return train_generator, val_generator
+    return train_generator, val_generator, test_generator
 
 
-train_generator, validation_generator = create_data_generators()
+train_generator, validation_generator, test_generator = create_data_generators()
 
 
 # Build model
@@ -101,7 +101,9 @@ def build_model(input_size):
     model.summary()
     return model
 
+
 model = build_model(input_size)
+
 
 # Compile model
 model.compile(optimizer=Adam(lr=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
@@ -127,12 +129,12 @@ print(history.history)
 best_model = load_model(os.path.join(models_filepath, 'deepfake_model.h5'))
 
 # Generate predictions
-# test_generator.reset()
-# preds = best_model.predict(test_generator, verbose=1)
-#
-# # Save predictions to DataFrame
-# test_results = pd.DataFrame({
-#     "Filename": test_generator.filenames,
-#     "Prediction": preds.flatten()
-# })
-# print(test_results)
+test_generator.reset()
+preds = best_model.predict(test_generator, verbose=1)
+
+# Save predictions to DataFrame
+test_results = pd.DataFrame({
+    "Filename": test_generator.filenames,
+    "Prediction": preds.flatten()
+})
+print(test_results)

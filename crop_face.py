@@ -34,7 +34,7 @@ def process_images(base_path, is_fake):
 
     dirs = get_all_directories(base_path)
 
-    output_path = './train_dataset/fake' if is_fake else './train_dataset/real'
+    output_path = './train_dataset/train/fake' if is_fake else './train_dataset/train/real'
 
     for filename in dirs:
         tmp_path = os.path.join(base_path, get_filename_only(filename))
@@ -46,6 +46,10 @@ def process_images(base_path, is_fake):
         print('Cropping Faces from Images...')
 
         for frame in frame_images:
+
+            #if not png file, skip
+            if not frame.endswith('.png'):
+                continue
             print(f'Processing {frame}')
             detector = MTCNN()
             image = cv2.cvtColor(cv2.imread(os.path.join(tmp_path, frame)), cv2.COLOR_BGR2RGB)
@@ -78,6 +82,7 @@ def process_images(base_path, is_fake):
 
 # Example usage
 if __name__ == "__main__":
-    base_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/output/'
+    # base_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/output/'
+    base_path = './raw_dataset/original_sequences/actors/c40/videos/output/'
     configure_tensorflow()
-    process_images(base_path, is_fake=True)
+    process_images(base_path, is_fake=False)

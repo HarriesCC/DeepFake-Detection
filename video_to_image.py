@@ -67,6 +67,8 @@ def process_videos(base_path, output_path):
 
 
 if __name__ == '__main__':
-    base_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/'
-    output_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/output/'
+    # base_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/'
+    # output_path = './raw_dataset/manipulated_sequences/DeepFakeDetection/c40/videos/output/'
+    base_path = './raw_dataset/original_sequences/actors/c40/videos/'
+    output_path = './raw_dataset/original_sequences/actors/c40/videos/output/'
     process_videos(base_path, output_path)
