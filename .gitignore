@@ -11,6 +11,10 @@ __pycache__/
 raw_dataset/**
 train_dataset/**
 models/**
+dataset/**
+processed_frames/**
+raw_videos/**
+*.mp4
 
 # Distribution / packaging
 .Python

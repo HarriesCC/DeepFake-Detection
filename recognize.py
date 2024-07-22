@@ -6,7 +6,9 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 from tensorflow.keras.utils import custom_object_scope
 
+
 print('TensorFlow version: ', tf.__version__)
+
 
 # Set paths
 dataset_path = './train_dataset/'
